@@ -1,4 +1,14 @@
 library(shiny)
 library(shinyjs)
 source(file = 'functions.r')
-# miau
+
+
+shinyUI(fluidPage(
+  useShinyjs(),
+
+  titlePanel("Lotnisko"),
+
+  mainPanel(
+    actionButton("refresh", "Refresh")
+  )
+))
