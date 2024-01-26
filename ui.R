@@ -20,7 +20,13 @@ shinyUI(fluidPage(
                selectInput(inputId = 'kraj',
                            label = 'wybierz kraj',
                            choices = load.lotniska()),
-               dataTableOutput('odloty.tab'))
+               dataTableOutput('odloty.tab')),
+
+      tabPanel('Przyloty',
+               selectInput(inputId = 'kraj',
+                           label = 'wybierz kraj',
+                           choices = load.lotniska()),
+               dataTableOutput('przyloty.tab'))
     )
   )
 ))
