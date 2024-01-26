@@ -9,6 +9,18 @@ shinyUI(fluidPage(
   titlePanel("Lotnisko"),
 
   mainPanel(
-    actionButton("refresh", "Refresh")
+
+    actionButton("refresh", "Refresh"),
+
+
+    tabsetPanel(
+
+
+      tabPanel('Odloty',
+               selectInput(inputId = 'kraj',
+                           label = 'wybierz kraj',
+                           choices = load.lotniska()),
+               dataTableOutput('odloty.tab'))
+    )
   )
 ))

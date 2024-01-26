@@ -13,3 +13,25 @@ close.my.connection <- function(con) {
   dbDisconnect(con)
 }
 
+load.lotniska <- function() {
+  query = "SELECT kraj FROM lotnisko"
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  lotniska = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  return(lotniska)
+}
+
+load.odloty <- function(kraj) {
+  query = paste0("SELECT kraj, miasto, data_lotu, godzina_lotu, nazwa
+                FROM loty JOIN lotnisko USING(id_lotniska) JOIN status USING(id_statusu)
+                 WHERE odlot = TRUE AND kraj = '",
+                 kraj,"'")
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  odloty = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  return(odloty)
+}
