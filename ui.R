@@ -30,10 +30,13 @@ shinyUI(fluidPage(
 
       tabPanel('loty pasażera',
                textInput(inputId = 'id_biletu',
-               label = 'Podaj numer biletu'),
+                         label = 'Podaj numer biletu'),
+               textInput(inputId = 'telefon',
+                         label = 'Podaj numer telefonu'),
                actionButton(inputId = 'szukaj',
                             label = 'Szukaj'),
-               dataTableOutput('bilety.pasazer')),
+               dataTableOutput('bilety.pasazer'),
+               dataTableOutput('bilety.pasazer.2')),
 
       tabPanel('Zaaktualizuj status',
                selectInput(inputId = 'id_lotu',
