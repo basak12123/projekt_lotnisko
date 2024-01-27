@@ -50,15 +50,17 @@ load.przyloty <- function(kraj) {
 }
 
 load.moje.loty <- function(telefon) {
-  query = paste0("SELECT kraj, miasto, data_lotu, godzina_lotu
-                 FROM loty JOIN lotnisko USING(id_lotniska) JOIN status USING(id_statusu)
-                 JOIN bilet USING(id_lotu) JOIN pasazer USING(id_pasazera)
-                 WHERE telefon = ",telefon,"")
-  con = open.my.connection()
-  res = dbSendQuery(con,query)
-  moje.loty = dbFetch(res)
-  dbClearResult(res)
-  close.my.connection(con)
-  return(moje.loty)
+  if(trimws(telefon) != "") {
+    query = paste0("SELECT imie, nazwisko, kraj, miasto, data_lotu, godzina_lotu
+                   FROM loty JOIN lotnisko USING(id_lotniska) JOIN status USING(id_statusu)
+                   JOIN bilet USING(id_lotu) JOIN pasazer USING(id_pasazera)
+                   WHERE telefon = ",telefon,"")
+    con = open.my.connection()
+    res = dbSendQuery(con,query)
+    moje.loty = dbFetch(res)
+    dbClearResult(res)
+    close.my.connection(con)
+    return(moje.loty)
+  }
 }
 
