@@ -51,7 +51,7 @@ shinyUI(fluidPage(
 
                actionButton(inputId = 'update.status',
                             label = 'zaaktualizuj'),
-               verbatimTextOutput("info")),
+               verbatimTextOutput("info_2")),
 
       tabPanel('Dodaj pasażera',
                textInput(inputId = 'imie',
@@ -62,7 +62,7 @@ shinyUI(fluidPage(
                          label = 'Telefon'),
                actionButton(inputId = 'pasazer.to.add',
                             label = 'Dodaj'),
-               verbatimTextOutput("info_2"))
+               verbatimTextOutput("info"))
 
     )
   )
