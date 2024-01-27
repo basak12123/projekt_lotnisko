@@ -23,10 +23,18 @@ shinyUI(fluidPage(
                dataTableOutput('odloty.tab')),
 
       tabPanel('Przyloty',
-               selectInput(inputId = 'kraj',
+               selectInput(inputId = 'kraj_2',
                            label = 'wybierz kraj',
                            choices = load.lotniska()),
-               dataTableOutput('przyloty.tab'))
+               dataTableOutput('przyloty.tab')),
+
+      tabPanel('loty pasażera',
+               textInput(inputId = 'telefon',
+               label = 'numer telefonu'),
+               actionButton(inputId = 'load.moje.loty',
+                            label = 'Szukaj'),
+               dataTableOutput('bilety.pasazer'))
     )
   )
 ))
+

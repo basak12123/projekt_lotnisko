@@ -11,7 +11,7 @@ shinyServer(function(input, output) {
   )
 
   output$przyloty.tab <- renderDataTable(
-    load.przyloty(input$kraj), # wywołanie funkcji z example_functions.r
+    load.przyloty(input$kraj_2), # wywołanie funkcji z example_functions.r
     options = list(
       pageLength = 10,
       lengthChange = FALSE,
@@ -20,7 +20,21 @@ shinyServer(function(input, output) {
     )
   )
 
+  output$bilety.pasazer <- renderDataTable(
+    load.moje.loty(input$telefon), # wywołanie funkcji z example_functions.r
+    options = list(
+      pageLength = 10,
+      lengthChange = FALSE,
+      searching = FALSE,
+      info = FALSE
+    )
+  )
+
+  observeEvent(input$load.moje.loty,
+               load.moje.loty(input$telefon))
+
   observeEvent(input$refresh, {
     refresh()
   })
 })
+
