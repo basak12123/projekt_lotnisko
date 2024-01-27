@@ -33,7 +33,18 @@ shinyUI(fluidPage(
                label = 'Podaj numer biletu'),
                actionButton(inputId = 'szukaj',
                             label = 'Szukaj'),
-               dataTableOutput('bilety.pasazer'))
+               dataTableOutput('bilety.pasazer')),
+
+      tabPanel('Dodaj pasażera',
+               textInput(inputId = 'imie',
+                         label = 'Imię'),
+               textInput(inputId = 'nazwisko',
+                         label = 'Nazwisko'),
+               textInput(inputId = 'telefon',
+                         label = 'Telefon'),
+               actionButton(inputId = 'pasazer.to.add',
+                            label = 'Dodaj'))
+
     )
   )
 ))

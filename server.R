@@ -36,5 +36,8 @@ shinyServer(function(input, output) {
   observeEvent(input$refresh, {
     refresh()
   })
+
+  observeEvent(input$add.pasazer,
+               add.pasazer(input$pasazer.to.add))
 })
 

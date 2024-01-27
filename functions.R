@@ -66,3 +66,11 @@ load.moje.loty <- function(id_biletu) {
   }
 }
 
+add.pasazer <- function(imie, nazwisko, telefon) {
+  if(trimws(imie)!="" && trimws(nazwisko)!="" && trimws(telefon)!=""){
+    query = paste0("INSERT INTO pasazer VALUES ('",imie,"', '",nazwisko,"', ",telefon,")")
+    con = open.my.connection()
+    res = dbSendQuery(con,query)
+    dbClearResult(res)
+    close.my.connection(con)
+  }}
