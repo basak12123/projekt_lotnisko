@@ -24,7 +24,7 @@ load.lotniska <- function() {
 }
 
 load.odloty <- function(kraj) {
-  query =  paste0("SELECT w.kraj, w.miasto, w.data_lotu, w.godzina_lotu, s.nazwa AS status, l.opoznienie, w.wolne_miejsca
+  query =  paste0("SELECT w.id_lotu, w.kraj, w.miasto, w.data_lotu, w.godzina_lotu, s.nazwa AS status, l.opoznienie, w.wolne_miejsca
                 FROM ile_wolnych_miejsc w JOIN loty l USING(id_lotu) JOIN status s USING(id_statusu)
                  WHERE odlot = TRUE AND kraj = '",
                   kraj,"'")
@@ -37,7 +37,7 @@ load.odloty <- function(kraj) {
 }
 
 load.przyloty <- function(kraj) {
-  query = paste0("SELECT w.kraj, w.miasto, w.data_lotu, w.godzina_lotu, s.nazwa AS status, l.opoznienie, w.wolne_miejsca
+  query = paste0("SELECT w.id_lotu, w.kraj, w.miasto, w.data_lotu, w.godzina_lotu, s.nazwa AS status, l.opoznienie, w.wolne_miejsca
                 FROM ile_wolnych_miejsc w JOIN loty l USING(id_lotu) JOIN status s USING(id_statusu)
                  WHERE odlot = FALSE AND kraj = '",
                  kraj,"'")
@@ -88,7 +88,7 @@ load.status <- function() {
 }
 
 load.id.lotu <- function() {
-  query = "SELECT id_lotu FROM loty"
+  query = "SELECT id_lotu FROM loty ORDER BY id_lotu"
   con = open.my.connection()
   res = dbSendQuery(con,query)
   id_lotu = dbFetch(res)
