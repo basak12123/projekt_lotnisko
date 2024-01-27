@@ -21,7 +21,7 @@ shinyServer(function(input, output) {
   )
 
   output$bilety.pasazer <- renderDataTable(
-    load.moje.loty(input$telefon), # wywołanie funkcji z example_functions.r
+    load.moje.loty(input$id_biletu), # wywołanie funkcji z example_functions.r
     options = list(
       pageLength = 10,
       lengthChange = FALSE,
@@ -31,7 +31,7 @@ shinyServer(function(input, output) {
   )
 
   observeEvent(input$szukaj,
-               load.moje.loty(input$telefon))
+               load.moje.loty(input$id_biletu))
 
   observeEvent(input$refresh, {
     refresh()

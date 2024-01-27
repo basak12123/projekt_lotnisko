@@ -29,9 +29,9 @@ shinyUI(fluidPage(
                dataTableOutput('przyloty.tab')),
 
       tabPanel('loty pasażera',
-               textInput(inputId = 'telefon',
-               label = 'numer telefonu'),
-               actionButton(inputId = 'szukaj.loty',
+               textInput(inputId = 'id_biletu',
+               label = 'Podaj numer biletu'),
+               actionButton(inputId = 'szukaj',
                             label = 'Szukaj'),
                dataTableOutput('bilety.pasazer'))
     )
