@@ -177,6 +177,7 @@ INSERT INTO lotnisko (id_lotniska, kraj, miasto) VALUES (6, 'Australia', 'Sydney
 INSERT INTO lotnisko (id_lotniska, kraj, miasto) VALUES (7, 'Brazylia', 'Rio De Janeiro');
 INSERT INTO lotnisko (id_lotniska, kraj, miasto) VALUES (8, 'Polska', 'Warszawa');
 INSERT INTO lotnisko (id_lotniska, kraj, miasto) VALUES (9, 'Niemcy', 'Berlin');
+INSERT INTO lotnisko (id_lotniska, kraj, miasto) VALUES (10, 'Japonia', 'Osaka');
 
 
 INSERT INTO linia_lotnicza(nazwa) VALUES ('Polskie Linie lotnicze LOT');
@@ -301,6 +302,7 @@ INSERT INTO loty(data_lotu, godzina_lotu, id_lotniska, nr_stanowiska, id_samolot
 INSERT INTO loty(data_lotu, godzina_lotu, id_lotniska, nr_stanowiska, id_samolotu, id_pilot_1, odlot, id_statusu, opoznienie) VALUES ('2024-01-29', '17:30:00', 1, 2, 9234, 9, FALSE, 3, '00:23:00');
 INSERT INTO loty(data_lotu, godzina_lotu, id_lotniska, nr_stanowiska, id_samolotu, id_pilot_1, odlot, id_statusu) VALUES ('2024-02-01', '8:30:00', 2, 4, 2137, 8, FALSE, 8);
 INSERT INTO loty(data_lotu, godzina_lotu, id_lotniska, nr_stanowiska, id_samolotu, id_pilot_1, odlot, id_statusu) VALUES ('2024-01-29', '19:11:00', 6, 6, 9234, 4, FALSE, 2);
+INSERT INTO loty(data_lotu, godzina_lotu, id_lotniska, nr_stanowiska, id_samolotu, id_pilot_1, id_statusu) VALUES ('2024-03-01', '18:20:00', 10, 6, 1023, 4, 1);
 
 
 INSERT INTO bilet(id_pasazera, id_lotu) VALUES (44, 1);
