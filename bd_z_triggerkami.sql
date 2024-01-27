@@ -115,7 +115,7 @@ CREATE OR REPLACE FUNCTION spr_nr_stanowiska() RETURNS TRIGGER AS $$
             THEN RAISE EXCEPTION 'Stanowisko % w dniu % i godzinie % jest juz zajete.', NEW.nr_stanowiska, NEW.data_lotu, NEW.godzina_lotu; 
         END IF;
         RETURN NEW;
-    END;
+        END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE TRIGGER ok_samolot BEFORE UPDATE OR INSERT ON loty FOR EACH ROW EXECUTE PROCEDURE spr_nr_stanowiska();
@@ -123,7 +123,7 @@ CREATE TRIGGER ok_samolot BEFORE UPDATE OR INSERT ON loty FOR EACH ROW EXECUTE P
 
 CREATE OR REPLACE FUNCTION aktywny_samolot() RETURNS TRIGGER AS $$
     BEGIN
-    IF NEW.aktywny=FALSE AND EXISTS (SELECT l.id_statusu FROM loty l JOIN samolot s USING(id_samolotu) WHERE l.id_samolotu=OLD.id_samolotu AND l.id_statusu!=8)
+    IF NEW.aktywny=FALSE AND EXISTS (SELECT l.id_statusu FROM loty l JOIN samolot s USING(id_samolotu) WHERE l.id_samolotu=OLD.id_samolotu AND (l.id_statusu!=8 OR l.id_statusu !=6))
     THEN RAISE EXCEPTION 'Nie mozna dezaktywowac samolotu - ma juz zaplanowane loty';
     END IF;
     RETURN NEW;
@@ -134,7 +134,7 @@ CREATE TRIGGER ok_aktywnosc BEFORE UPDATE ON samolot FOR EACH ROW EXECUTE PROCED
 
 CREATE OR REPLACE FUNCTION aktywny_pilot() RETURNS TRIGGER AS $$
     BEGIN
-    IF NEW.aktywny=FALSE AND EXISTS (SELECT l.id_statusu FROM loty l JOIN pilot p ON(id_pilota=id_pilot_1) WHERE l.id_pilot_1 = OLD.id_pilota AND l.id_statusu!=8)
+    IF NEW.aktywny=FALSE AND EXISTS (SELECT l.id_statusu FROM loty l JOIN pilot p ON(id_pilota=id_pilot_1) WHERE l.id_pilot_1 = OLD.id_pilota AND (l.id_statusu!=8 OR l.id_statusu !=6))
     THEN RAISE EXCEPTION 'Nie mozna dezaktywowac pilota - ma juz zaplanowane loty';
     END IF;
     RETURN NEW;
@@ -152,6 +152,20 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE RULE nie_usuwac_lotu AS ON DELETE TO loty DO INSTEAD NOTHING;
+
+CREATE OR REPLACE FUNCTION spr_pelnosc_samolotu() RETURNS TRIGGER AS $$
+    DECLARE 
+    ile_p INTEGER;
+    BEGIN 
+        SELECT count(id_lotu) INTO ile_p FROM bilet WHERE id_lotu=NEW.id_lotu GROUP BY id_lotu;
+        IF (ile_p = (SELECT s.ile_pasazerow FROM samolot s JOIN loty l USING(id_samolotu) WHERE id_lotu=NEW.id_lotu))
+        THEN RAISE EXCEPTION 'Samolot przypisany do lotu % jest juz pelny - nie mozna dodac nowych pasazerow', NEW.id_lotu;
+        END IF;
+        RETURN NEW;
+    END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER ok_pelnosc_samolotu BEFORE UPDATE OR INSERT ON bilet FOR EACH ROW EXECUTE PROCEDURE spr_pelnosc_samolotu();
 
 
 INSERT INTO lotnisko (id_lotniska, kraj, miasto) VALUES (1, 'Wielka Brytania', 'Londyn');
@@ -312,8 +326,8 @@ INSERT INTO bilet(id_pasazera, id_lotu) VALUES (44, 1);
  INSERT INTO bilet(id_pasazera, id_lotu) VALUES (7, 14);
  INSERT INTO bilet(id_pasazera, id_lotu) VALUES (9, 14);
  INSERT INTO bilet(id_pasazera, id_lotu) VALUES (15, 14);
- INSERT INTO bilet(id_pasazera, id_lotu) VALUES (48, 14);
- INSERT INTO bilet(id_pasazera, id_lotu) VALUES (50, 14);
+ INSERT INTO bilet(id_pasazera, id_lotu) VALUES (48, 10);
+ INSERT INTO bilet(id_pasazera, id_lotu) VALUES (50, 10);
  INSERT INTO bilet(id_pasazera, id_lotu) VALUES (11, 14);
  INSERT INTO bilet(id_pasazera, id_lotu) VALUES (22, 14);
  INSERT INTO bilet(id_pasazera, id_lotu) VALUES (49, 14);
@@ -352,7 +366,7 @@ INSERT INTO bilet(id_pasazera, id_lotu) VALUES (44, 1);
  INSERT INTO bilet(id_pasazera, id_lotu) VALUES (13, 13);
  INSERT INTO bilet(id_pasazera, id_lotu) VALUES (36, 13);
  INSERT INTO bilet(id_pasazera, id_lotu) VALUES (18, 12);
- INSERT INTO bilet(id_pasazera, id_lotu) VALUES (10, 14);
+ INSERT INTO bilet(id_pasazera, id_lotu) VALUES (10, 4);
  INSERT INTO bilet(id_pasazera, id_lotu) VALUES (5, 14);
  INSERT INTO bilet(id_pasazera, id_lotu) VALUES (33, 14);
  INSERT INTO bilet(id_pasazera, id_lotu) VALUES (20, 12);
@@ -461,3 +475,10 @@ INSERT INTO bagaz(id_rodzaju, id_biletu) VALUES (2, 1);
  INSERT INTO bagaz(id_rodzaju, id_biletu) VALUES (2, 13);
  INSERT INTO bagaz(id_rodzaju, id_biletu) VALUES (2, 37);
  INSERT INTO bagaz(id_rodzaju, id_biletu) VALUES (1, 55);
+ 
+ 
+ CREATE VIEW zajete_miejsca AS SELECT l.id_lotu, count(l.id_lotu) AS zajete_miejsca FROM bilet l  GROUP BY l.id_lotu;
+
+-- CREATE VIEW ile_wolnych_miejsc AS SELECT l.id_lotu, s.ile_pasazerow - m.zajete_miejsca AS wolne_miejsca FROM samolot s JOIN loty l USING(id_samolotu) JOIN zajete_miejsca m USING(id_lotu);
+
+CREATE VIEW ile_wolnych_miejsc AS SELECT l.id_lotu, l.data_lotu, l.godzina_lotu, k.kraj, k.miasto, s.ile_pasazerow - m.zajete_miejsca AS wolne_miejsca FROM samolot s JOIN loty l USING(id_samolotu) JOIN zajete_miejsca m USING(id_lotu) JOIN lotnisko k USING(id_lotniska);
