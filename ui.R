@@ -1,9 +1,11 @@
 library(shiny)
 library(shinyjs)
+library(shinythemes)
 source(file = 'functions.r')
 
 
 shinyUI(fluidPage(
+  theme = shinytheme("darkly"),
   useShinyjs(),
 
   titlePanel("Lotnisko"),
@@ -31,7 +33,7 @@ shinyUI(fluidPage(
       tabPanel('loty pasażera',
                textInput(inputId = 'id_biletu',
                          label = 'Podaj numer biletu'),
-               textInput(inputId = 'telefon',
+               textInput(inputId = 'telefon.2',
                          label = 'Podaj numer telefonu'),
                actionButton(inputId = 'szukaj',
                             label = 'Szukaj'),

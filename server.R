@@ -48,7 +48,7 @@ shinyServer(function(input, output) {
     if(trimws(input$id_biletu) != ""){
       load.moje.loty(input$id_biletu)
     } else if(trimws(input$telefon) != ""){
-      load.moje.loty.2(input$telefon)
+      load.moje.loty.2(input$telefon.2)
     }
     })
 
