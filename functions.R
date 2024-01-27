@@ -24,7 +24,7 @@ load.lotniska <- function() {
 }
 
 load.odloty <- function(kraj) {
-  query =  paste0("SELECT w.kraj, w.miasto, w.data_lotu, w.godzina_lotu, s.nazwa, l.opoznienie, w.wolne_miejsca
+  query =  paste0("SELECT w.kraj, w.miasto, w.data_lotu, w.godzina_lotu, s.nazwa AS status, l.opoznienie, w.wolne_miejsca
                 FROM ile_wolnych_miejsc w JOIN loty l USING(id_lotu) JOIN status s USING(id_statusu)
                  WHERE odlot = TRUE AND kraj = '",
                   kraj,"'")
@@ -37,7 +37,7 @@ load.odloty <- function(kraj) {
 }
 
 load.przyloty <- function(kraj) {
-  query = paste0("SELECT w.kraj, w.miasto, w.data_lotu, w.godzina_lotu, s.nazwa, l.opoznienie, w.wolne_miejsca
+  query = paste0("SELECT w.kraj, w.miasto, w.data_lotu, w.godzina_lotu, s.nazwa AS status, l.opoznienie, w.wolne_miejsca
                 FROM ile_wolnych_miejsc w JOIN loty l USING(id_lotu) JOIN status s USING(id_statusu)
                  WHERE odlot = FALSE AND kraj = '",
                  kraj,"'")
@@ -52,7 +52,7 @@ load.przyloty <- function(kraj) {
 load.moje.loty <- function(id_biletu) {
   if(trimws(id_biletu) != "") {
     query = paste0("SELECT pa.imie, pa.nazwisko, pa.telefon, lo.kraj, lo.miasto, loty.data_lotu,
-                   loty.godzina_lotu, loty.nr_stanowiska, st.nazwa, loty.odlot, rb.nazwa AS rodzaj_bagażu
+                   loty.godzina_lotu, loty.nr_stanowiska, st.nazwa AS status, loty.odlot, rb.nazwa AS rodzaj_bagażu
                    FROM loty JOIN lotnisko lo USING(id_lotniska) JOIN status st USING(id_statusu)
                    JOIN bilet bi USING(id_lotu) JOIN pasazer pa USING(id_pasazera)
                    JOIN bagaz ba USING(id_biletu) JOIN rodzaj_bagazu rb USING(id_rodzaju)
@@ -98,7 +98,7 @@ load.id.lotu <- function() {
 }
 
 load.status.tab <- function(id_lotu) {
-  query = paste0("SELECT lo.kraj, lo.miasto, l.data_lotu, l.godzina_lotu, s.nazwa, l.opoznienie
+  query = paste0("SELECT lo.kraj, lo.miasto, l.data_lotu, l.godzina_lotu, s.nazwa AS status, l.opoznienie
                  FROM loty l JOIN lotnisko lo USING(id_lotniska) JOIN status s USING(id_statusu)
                  WHERE l.id_lotu = ",id_lotu,"")
   con = open.my.connection()
