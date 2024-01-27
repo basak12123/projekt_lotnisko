@@ -43,7 +43,8 @@ shinyUI(fluidPage(
                textInput(inputId = 'telefon',
                          label = 'Telefon'),
                actionButton(inputId = 'pasazer.to.add',
-                            label = 'Dodaj'))
+                            label = 'Dodaj'),
+               verbatimTextOutput("info"))
 
     )
   )

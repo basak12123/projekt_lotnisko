@@ -33,11 +33,19 @@ shinyServer(function(input, output) {
   observeEvent(input$szukaj,
                load.moje.loty(input$id_biletu))
 
+  observeEvent(input$pasazer.to.add,
+               add.pasazer(input$imie,
+                           input$nazwisko,
+                           input$telefon))
+
+  observeEvent(input$pasazer.to.add, {
+   output$info <- renderPrint({
+      paste("Dodano użytkownika:", input$imie, input$nazwisko, input$telefon)
+    })
+  })
+
   observeEvent(input$refresh, {
     refresh()
   })
-
-  observeEvent(input$add.pasazer,
-               add.pasazer(input$pasazer.to.add))
 })
 
