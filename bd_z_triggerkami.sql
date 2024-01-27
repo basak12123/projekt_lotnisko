@@ -479,8 +479,6 @@ INSERT INTO bagaz(id_rodzaju, id_biletu) VALUES (2, 1);
  INSERT INTO bagaz(id_rodzaju, id_biletu) VALUES (1, 55);
  
  
- CREATE VIEW zajete_miejsca AS SELECT l.id_lotu, count(l.id_lotu) AS zajete_miejsca FROM bilet l  GROUP BY l.id_lotu;
-
--- CREATE VIEW ile_wolnych_miejsc AS SELECT l.id_lotu, s.ile_pasazerow - m.zajete_miejsca AS wolne_miejsca FROM samolot s JOIN loty l USING(id_samolotu) JOIN zajete_miejsca m USING(id_lotu);
+CREATE VIEW zajete_miejsca AS SELECT l.id_lotu, count(b.id_lotu) AS zajete_miejsca FROM bilet b RIGHT JOIN loty l USING(id_lotu) GROUP BY l.id_lotu ORDER BY id_lotu;
 
 CREATE VIEW ile_wolnych_miejsc AS SELECT l.id_lotu, l.data_lotu, l.godzina_lotu, k.kraj, k.miasto, s.ile_pasazerow - m.zajete_miejsca AS wolne_miejsca FROM samolot s JOIN loty l USING(id_samolotu) JOIN zajete_miejsca m USING(id_lotu) JOIN lotnisko k USING(id_lotniska);
