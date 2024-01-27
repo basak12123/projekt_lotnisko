@@ -167,6 +167,30 @@ $$ LANGUAGE 'plpgsql';
 
 CREATE TRIGGER ok_pelnosc_samolotu BEFORE UPDATE OR INSERT ON bilet FOR EACH ROW EXECUTE PROCEDURE spr_pelnosc_samolotu();
 
+CREATE OR REPLACE FUNCTION czy_podano_opoznienie() RETURNS TRIGGER AS $$
+BEGIN
+	IF ((SELECT s.nazwa FROM status s WHERE s.id_statusu = NEW.id_statusu) = 'Opóźniony' AND NEW.opoznienie IS NULL)
+	THEN RAISE EXCEPTION 'Nie podano opoznienia.';
+	END IF;
+	RETURN NEW;
+END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER podano_opoznienie BEFORE UPDATE OR INSERT ON loty
+FOR EACH ROW EXECUTE PROCEDURE czy_podano_opoznienie();
+
+CREATE OR REPLACE FUNCTION sprawdz_lot() RETURNS TRIGGER AS $$
+BEGIN
+	IF((SELECT s.aktywny FROM samolot s WHERE s.id_samolotu=NEW.id_samolotu) = 0)
+	THEN RAISE EXCEPTION 'Podany samolot ma status nieaktywny';
+	END IF;
+	IF((SELECT p.aktywny FROM pilot WHERE p.id_pilota=NEW.id_pilot_1) = 0)
+	THEN RAISE EXCEPTION 'Podany pilot ma status nieaktywny';
+	END IF;
+END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE TRIGGER ok_lot BEFORE INSERT OR UPDATE ON loty FOR EACH ROW EXECUTE PROCEDURE sprawdz_lot();
 
 INSERT INTO lotnisko (id_lotniska, kraj, miasto) VALUES (1, 'Wielka Brytania', 'Londyn');
 INSERT INTO lotnisko (id_lotniska, kraj, miasto) VALUES (2, 'Stany Zjednoczone Ameryki', 'Waszyngton');
