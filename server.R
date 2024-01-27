@@ -30,7 +30,7 @@ shinyServer(function(input, output) {
     )
   )
 
-  observeEvent(input$szukaj.loty,
+  observeEvent(input$szukaj,
                load.moje.loty(input$telefon))
 
   observeEvent(input$refresh, {
