@@ -51,7 +51,7 @@ load.przyloty <- function(kraj) {
 
 load.moje.loty <- function(telefon) {
   if(trimws(telefon) != "") {
-    query = paste0("SELECT imie, nazwisko, kraj, miasto, data_lotu, godzina_lotu
+    query = paste0("SELECT imie, nazwisko, kraj, miasto, data_lotu, godzina_lotu, nr_stanowiska, status, odlot
                    FROM loty JOIN lotnisko USING(id_lotniska) JOIN status USING(id_statusu)
                    JOIN bilet USING(id_lotu) JOIN pasazer USING(id_pasazera)
                    WHERE telefon = ",telefon,"")
