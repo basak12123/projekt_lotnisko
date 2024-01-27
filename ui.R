@@ -35,6 +35,24 @@ shinyUI(fluidPage(
                             label = 'Szukaj'),
                dataTableOutput('bilety.pasazer')),
 
+      tabPanel('Zaaktualizuj status',
+               selectInput(inputId = 'id_lotu',
+                           label = 'Wybierz lot',
+                           choices = load.id.lotu()),
+
+               dataTableOutput('status.tab'),
+
+               selectInput(inputId='nazwa',
+                           label='wybierz status',
+                           choices=load.status()),
+
+               textInput(inputId = 'opoznienie',
+                         label = 'Podaj opoznienie'),
+
+               actionButton(inputId = 'update.status',
+                            label = 'zaaktualizuj'),
+               verbatimTextOutput("info")),
+
       tabPanel('Dodaj pasażera',
                textInput(inputId = 'imie',
                          label = 'Imię'),
@@ -44,7 +62,7 @@ shinyUI(fluidPage(
                          label = 'Telefon'),
                actionButton(inputId = 'pasazer.to.add',
                             label = 'Dodaj'),
-               verbatimTextOutput("info"))
+               verbatimTextOutput("info_2"))
 
     )
   )

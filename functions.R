@@ -77,3 +77,55 @@ add.pasazer <- function(imie, nazwisko, telefon) {
     cat(komunikat)
   }}
 
+load.status <- function() {
+  query = "SELECT DISTINCT nazwa FROM status"
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  status = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  return(status)
+}
+
+load.id.lotu <- function() {
+  query = "SELECT id_lotu FROM loty"
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  id_lotu = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  return(id_lotu)
+}
+
+load.status.tab <- function(id_lotu) {
+  query = paste0("SELECT lo.kraj, lo.miasto, l.data_lotu, l.godzina_lotu, s.nazwa, l.opoznienie
+                 FROM loty l JOIN lotnisko lo USING(id_lotniska) JOIN status s USING(id_statusu)
+                 WHERE l.id_lotu = ",id_lotu,"")
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  id_lotu = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  return(id_lotu)
+}
+
+update.status <- function(id_lotu, nazwa, opoznienie) {
+  if(opoznienie == "" && nazwa != 'Opóźniony'){
+    query = paste0("UPDATE loty SET id_statusu = (SELECT s.id_statusu FROM status s WHERE s.nazwa='",nazwa,
+                   "') WHERE id_lotu=",id_lotu)
+    con = open.my.connection()
+    res = dbSendQuery(con,query)
+    dbClearResult(res)
+    close.my.connection(con)
+    cat("Zmieniono status lotu ", id_lotu," na ",nazwa)
+  } else if(nazwa == 'Opóźniony'){
+    query = paste0("UPDATE loty SET id_statusu = (SELECT s.id_statusu FROM status s  WHERE s.nazwa='",nazwa,
+                   "'), opoznienie ='",opoznienie,"' WHERE id_lotu=",id_lotu)
+    con = open.my.connection()
+    res = dbSendQuery(con,query)
+    dbClearResult(res)
+    close.my.connection(con)
+    cat("Zmieniono status lotu ", id_lotu," na ",nazwa, " (opoznienie = ", opoznienie, " )")
+  }
+}
+
