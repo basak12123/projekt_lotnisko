@@ -192,6 +192,38 @@ $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE TRIGGER ok_lot BEFORE INSERT OR UPDATE ON loty FOR EACH ROW EXECUTE PROCEDURE sprawdz_lot();
 
+CREATE OR REPLACE FUNCTION add_or_update_lot(
+    id_lotu INTEGER,
+    data_lotu DATE,
+    godzina_lotu TIME,
+    id_lotniska INTEGER,
+    nr_stanowiska INTEGER,
+    id_samolotu INTEGER,
+    id_pilot_1 INTEGER,
+    odlot BOOL,
+    id_statusu INTEGER,
+    opoznienie TIME
+) RETURNS VOID AS $$
+BEGIN
+    IF id_lotu IN (SELECT l.id_lotu FROM loty l) THEN
+        UPDATE loty SET
+            data_lotu = data_lotu,
+            godzina_lotu = godzina_lotu,
+            id_lotniska = id_lotniska,
+            nr_stanowiska = nr_stanowiska,
+            id_samolotu = id_samolotu,
+            id_pilot_1 = id_pilot_1,
+            odlot = odlot,
+            id_statusu = id_statusu,
+            opoznienie = opoznienie
+        WHERE id_lotu = id_lotu;
+    ELSE
+        INSERT INTO loty (id_lotu, data_lotu, godzina_lotu, id_lotniska, nr_stanowiska, id_samolotu, id_pilot_1, odlot, id_statusu, opoznienie)
+        VALUES (id_lotu, data_lotu, godzina_lotu, id_lotniska, nr_stanowiska, id_samolotu, id_pilot_1, odlot, id_statusu, opoznienie);
+    END IF;
+END;
+$$ LANGUAGE 'plpgsql';
+
 INSERT INTO lotnisko (id_lotniska, kraj, miasto) VALUES (1, 'Wielka Brytania', 'Londyn');
 INSERT INTO lotnisko (id_lotniska, kraj, miasto) VALUES (2, 'Stany Zjednoczone Ameryki', 'Waszyngton');
 INSERT INTO lotnisko (id_lotniska, kraj, miasto) VALUES (3, 'Dania', 'Kopenhaga');
