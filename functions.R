@@ -24,10 +24,10 @@ load.lotniska <- function() {
 }
 
 load.odloty <- function(kraj) {
-  query = paste0("SELECT kraj, miasto, data_lotu, godzina_lotu, nazwa, opoznienie
-                FROM loty JOIN lotnisko USING(id_lotniska) JOIN status USING(id_statusu)
+  query =  paste0("SELECT w.kraj, w.miasto, w.data_lotu, w.godzina_lotu, s.nazwa, l.opoznienie, w.wolne_miejsca
+                FROM ile_wolnych_miejsc w JOIN loty l USING(id_lotu) JOIN status s USING(id_statusu)
                  WHERE odlot = TRUE AND kraj = '",
-                 kraj,"'")
+                  kraj,"'")
   con = open.my.connection()
   res = dbSendQuery(con,query)
   odloty = dbFetch(res)
@@ -37,8 +37,8 @@ load.odloty <- function(kraj) {
 }
 
 load.przyloty <- function(kraj) {
-  query = paste0("SELECT kraj, miasto, data_lotu, godzina_lotu, nazwa, opoznienie
-                FROM loty JOIN lotnisko USING(id_lotniska) JOIN status USING(id_statusu)
+  query = paste0("SELECT w.kraj, w.miasto, w.data_lotu, w.godzina_lotu, s.nazwa, l.opoznienie, w.wolne_miejsca
+                FROM ile_wolnych_miejsc w JOIN loty l USING(id_lotu) JOIN status s USING(id_statusu)
                  WHERE odlot = FALSE AND kraj = '",
                  kraj,"'")
   con = open.my.connection()
