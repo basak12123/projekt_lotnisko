@@ -1,4 +1,4 @@
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
 
   output$odloty.tab <- renderDataTable(
     load.odloty(input$kraj), # wywołanie funkcji z example_functions.r
@@ -64,6 +64,29 @@ shinyServer(function(input, output) {
                                              input$opoznienie))
     })
 
+  observeEvent(input$lot.to.add, {
+    output$info_3 <- renderPrint(add.lot(input$data,
+                                       input$godzina,
+                                       input$lotnisko,
+                                       input$stanowisko,
+                                       input$samolot,
+                                       input$pilot,
+                                       input$kierunek))
+  })
+
+  observe(updateSelectInput(session,
+                            'lot',
+                            choices = load.loty(input$data_2,
+                                                input$kierunek_2)))
+
+  observeEvent(input$bilet.to.add, {
+    output$info_4 <- renderPrint(add.bilet(input$telefon_3,
+                                           input$lot))
+  })
+
+  observeEvent(input$bilet.to.remove, {
+    output$info_5 <- renderPrint(delete.bilet(input$id_biletu))
+  })
 
   observeEvent(input$refresh, {
     refresh()
