@@ -1,11 +1,11 @@
 library("RPostgres")
 
 open.my.connection <- function() {
-  con <- dbConnect(RPostgres::Postgres(),dbname = 'postgres', # nazwa naszej projektowej bazy
+  con <- dbConnect(RPostgres::Postgres(),dbname = 'projekt_lotnisko', # nazwa naszej projektowej bazy
                    host = 'localhost',
-                   port = 5434, # port ten sam co w psql - zwykle 5432
-                   user = 'postgres', # nasza nazwa użytkownika psql
-                   password = '') # i nasze hasło tego użytkownika
+                   port = 5432, # port ten sam co w psql - zwykle 5432
+                   user = 'starling', # nasza nazwa użytkownika psql
+                   password = 'pokora2002') # i nasze hasło tego użytkownika
   return (con)
 }
 
@@ -146,3 +146,110 @@ update.status <- function(id_lotu, nazwa, opoznienie) {
   }
 }
 
+load.full.lotniska <- function() {
+  query = "SELECT * FROM lotnisko"
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  lotniska = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  lotniska = apply(lotniska, 1, function(lotnisko){
+    paste0(lotnisko[1],", ",lotnisko[2],", ",lotnisko[3])
+  }, simplify = FALSE)
+  return(lotniska)
+}
+as.numeric(unlist(strsplit(unlist(load.full.lotniska()[1]), ","))[1])
+
+load.samoloty <- function() {
+  query = "SELECT id_samolotu FROM samolot"
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  samoloty = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  return(samoloty)
+}
+
+load.piloci <- function() {
+  query = "SELECT id_pilota FROM pilot"
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  piloci = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  return(piloci)
+}
+
+add.lot <- function(data, godzina, lotnisko, nr_stanowiska, id_samolotu, id_pilot, odlot) {
+  id_lotniska = as.numeric(unlist(strsplit(unlist(lotnisko), ","))[1])
+    query = paste0("INSERT INTO loty(data_lotu, godzina_lotu, id_lotniska, nr_stanowiska, id_samolotu, id_pilot_1, odlot, id_statusu)
+                   VALUES ('",data,"', '",godzina,"', ",id_lotniska,", ",nr_stanowiska,", ",id_samolotu,", ",id_pilot,", ",
+                   odlot,", 1)")
+    con = open.my.connection()
+    res = dbSendQuery(con,query)
+    dbClearResult(res)
+    close.my.connection(con)
+    cat("Dodano lot")
+}
+
+load.numery.telefonu <- function(){
+  query = "SELECT telefon FROM pasazer"
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  numery = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  return(numery)
+}
+
+load.loty <- function(data, odlot){
+  if(odlot == 'Odlot') {
+    odlot <- TRUE
+  }else{
+    odlot <- FALSE
+  }
+  query = paste0("SELECT id_lotu, godzina_lotu, kraj, miasto FROM loty
+    JOIN lotnisko USING(id_lotniska)
+    WHERE odlot = ",odlot," AND data_lotu = '",data,"'")
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  loty = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  loty = apply(loty, 1, function(lot){
+    paste0(lot[1],", ",lot[2],", ",lot[3],", ",lot[4])
+  })
+  return(loty)
+}
+
+id.pasazera.from.telefon <- function(telefon){
+  query = paste0("SELECT id_pasazera FROM pasazer WHERE telefon=",telefon)
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  id = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  return(id)
+}
+
+add.bilet <- function(telefon, lot) {
+  id_lotu = as.numeric(unlist(strsplit(unlist(lot), ","))[1])
+  id_pasazera = id.pasazera.from.telefon(telefon)
+  query = paste0("INSERT INTO bilet(id_pasazera, id_lotu) VALUES (",id_pasazera,", ",id_lotu,")")
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  dbClearResult(res)
+  close.my.connection(con)
+  cat("Dodano bilet")
+}
+
+delete.bilet <- function(id) {
+  if(trimws(id) != "") {
+    query = paste0("DELETE FROM bilet WHERE id_biletu=",id)
+    con = open.my.connection()
+    res = dbSendQuery(con,query)
+    dbClearResult(res)
+    close.my.connection(con)
+    cat("Usunięto bilet")
+  }
+}
