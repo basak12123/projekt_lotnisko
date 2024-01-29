@@ -35,7 +35,7 @@ shinyServer(function(input, output, session) {
   )
 
   output$status.tab <- renderDataTable(
-    load.status.tab(input$id_lotu),
+    load.status.tab(input$id_lotu.1),
     options = list(
       pageLength = 10,
       lengthChange = FALSE,
@@ -59,9 +59,9 @@ shinyServer(function(input, output, session) {
   })
 
   observeEvent(input$update.status.1,{
-    output$info_2 <- renderPrint(update.status(input$id_lotu,
-                                             input$nazwa,
-                                             input$opoznienie))
+    output$info_2 <- renderPrint(update.status(input$id_lotu.1,
+                                             input$nazwa.1,
+                                             input$opoznienie.1))
     })
 
   observeEvent(input$lot.to.add, {

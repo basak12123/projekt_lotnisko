@@ -100,20 +100,9 @@ id_biletu INTEGER
 		ON DELETE CASCADE
 );
 
-CREATE OR REPLACE VIEW bagaz_pasazera AS
-SELECT b.id_biletu, p.telefon, rb.nazwa
-FROM bagaz b JOIN bilet bt USING(id_biletu)
-JOIN pasazer p USING(id_pasazera)
-JOIN rodzaj_bagazu rb USING(id_rodzaju);
 
 CREATE OR REPLACE FUNCTION spr_nr_stanowiska() RETURNS TRIGGER AS $$
     BEGIN
-        IF ((SELECT s.aktywny FROM samolot s WHERE s.id_samolotu=NEW.id_samolotu)=FALSE)
-        THEN RAISE EXCEPTION 'Samolot o id % nie jest aktywny', NEW.id_samolotu;
-        END IF;
-        IF ((SELECT p.aktywny FROM pilot p WHERE p.id_pilota=NEW.id_pilot_1)=FALSE)
-        THEN RAISE EXCEPTION 'Pilot o id % nie jest aktywny', NEW.id_pilot_1;
-        END IF;
         IF (NEW.nr_stanowiska < 1 OR NEW.nr_stanowiska> 6)
             THEN RAISE EXCEPTION 'Stanowisko o numerze % nie istnieje.', NEW.nr_stanowiska;
         END IF;
@@ -188,10 +177,10 @@ FOR EACH ROW EXECUTE PROCEDURE czy_podano_opoznienie();
 CREATE OR REPLACE FUNCTION sprawdz_lot() RETURNS TRIGGER AS $$
 BEGIN
 	IF((SELECT s.aktywny FROM samolot s WHERE s.id_samolotu=NEW.id_samolotu) = FALSE)
-	THEN RAISE EXCEPTION 'Podany samolot ma status nieaktywny';
+	THEN RAISE EXCEPTION 'Podany samolot o id % ma status nieaktywny', NEW.id_samolotu;
 	END IF;
 	IF((SELECT p.aktywny FROM pilot p WHERE p.id_pilota=NEW.id_pilot_1) = FALSE)
-	THEN RAISE EXCEPTION 'Podany pilot ma status nieaktywny';
+	THEN RAISE EXCEPTION 'Podany pilot o id % ma status nieaktywny', NEW.id_pilot_1;
 	END IF;
     RETURN NEW;
 END;
@@ -566,6 +555,22 @@ INSERT INTO bagaz(id_rodzaju, id_biletu) VALUES (2, 1);
  INSERT INTO bagaz(id_rodzaju, id_biletu) VALUES (1, 55);
 
 
-CREATE VIEW zajete_miejsca AS SELECT l.id_lotu, count(b.id_lotu) AS zajete_miejsca FROM bilet b RIGHT JOIN loty l USING(id_lotu) GROUP BY l.id_lotu ORDER BY id_lotu;
+CREATE VIEW zajete_miejsca AS
+  SELECT l.id_lotu, count(b.id_lotu) AS zajete_miejsca
+    FROM bilet b
+    RIGHT JOIN loty l USING(id_lotu)
+    GROUP BY l.id_lotu
+    ORDER BY id_lotu;
 
-CREATE VIEW ile_wolnych_miejsc AS SELECT l.id_lotu, l.data_lotu, l.godzina_lotu, k.kraj, k.miasto, s.ile_pasazerow - m.zajete_miejsca AS wolne_miejsca FROM samolot s JOIN loty l USING(id_samolotu) JOIN zajete_miejsca m USING(id_lotu) JOIN lotnisko k USING(id_lotniska);
+CREATE VIEW ile_wolnych_miejsc AS
+  SELECT l.id_lotu, l.data_lotu, l.godzina_lotu, k.kraj, k.miasto, s.ile_pasazerow - m.zajete_miejsca AS wolne_miejsca
+    FROM samolot s
+    JOIN loty l USING(id_samolotu)
+    JOIN zajete_miejsca m USING(id_lotu)
+    JOIN lotnisko k USING(id_lotniska);
+
+CREATE OR REPLACE VIEW bagaz_pasazera AS
+  SELECT b.id_biletu, p.telefon, rb.nazwa
+    FROM bagaz b JOIN bilet bt USING(id_biletu)
+    JOIN pasazer p USING(id_pasazera)
+    JOIN rodzaj_bagazu rb USING(id_rodzaju);

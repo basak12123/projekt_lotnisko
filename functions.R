@@ -1,7 +1,7 @@
 library("RPostgres")
 
 open.my.connection <- function() {
-  con <- dbConnect(RPostgres::Postgres(),dbname = 'template1',
+  con <- dbConnect(RPostgres::Postgres(),dbname = 'postgres',
                    host = 'localhost',
                    port = 5434,
                    user = 'postgres',
@@ -127,7 +127,7 @@ load.status.tab <- function(id_lotu) {
 update.status <- function(id_lotu, nazwa, opoznienie) {
   if(nazwa != 'Opóźniony'){
     query = paste0("UPDATE loty SET id_statusu = (SELECT s.id_statusu FROM status s WHERE s.nazwa='",nazwa,
-                   "') WHERE id_lotu=",id_lotu)
+                   "'), opoznienie = NULL WHERE id_lotu=",id_lotu)
     con = open.my.connection()
     res = dbSendQuery(con,query)
     dbClearResult(res)

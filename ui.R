@@ -48,17 +48,17 @@ shinyUI(fluidPage(
                dataTableOutput('bagaz.tab')),
 
       tabPanel('Zaktualizuj status',
-               selectInput(inputId = 'id_lotu',
+               selectInput(inputId = 'id_lotu.1',
                            label = 'Wybierz lot',
                            choices = load.id.lotu()),
 
                dataTableOutput('status.tab'),
 
-               selectInput(inputId='nazwa',
+               selectInput(inputId='nazwa.1',
                            label='wybierz status',
                            choices=load.status()),
 
-               timeInput(inputId = 'opoznienie',
+               timeInput(inputId = 'opoznienie.1',
                          label = 'Podaj opoznienie',
                          value = NULL,
                          seconds = TRUE),
