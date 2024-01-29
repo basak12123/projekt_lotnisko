@@ -52,10 +52,9 @@ load.przyloty <- function(kraj) {
 load.moje.loty <- function(id_biletu) {
   if(trimws(id_biletu) != "") {
     query = paste0("SELECT pa.imie, pa.nazwisko, pa.telefon, lo.kraj, lo.miasto, loty.data_lotu,
-                   loty.godzina_lotu, loty.nr_stanowiska, st.nazwa AS status, loty.odlot, rb.nazwa AS rodzaj_bagażu
+                   loty.godzina_lotu, loty.nr_stanowiska, st.nazwa AS status
                    FROM loty JOIN lotnisko lo USING(id_lotniska) JOIN status st USING(id_statusu)
                    JOIN bilet bi USING(id_lotu) JOIN pasazer pa USING(id_pasazera)
-                   JOIN bagaz ba USING(id_biletu) JOIN rodzaj_bagazu rb USING(id_rodzaju)
                    WHERE bi.id_biletu = ",id_biletu,"")
     con = open.my.connection()
     res = dbSendQuery(con,query)
@@ -69,10 +68,9 @@ load.moje.loty <- function(id_biletu) {
 load.moje.loty.2 <- function(telefon) {
   if(trimws(telefon) != "") {
     query = paste0("SELECT pa.imie, pa.nazwisko, pa.telefon, lo.kraj, lo.miasto, loty.data_lotu,
-                   loty.godzina_lotu, loty.nr_stanowiska, st.nazwa AS status, loty.odlot, rb.nazwa AS rodzaj_bagażu
+                   loty.godzina_lotu, loty.nr_stanowiska, st.nazwa AS status, loty.odlot
                    FROM loty JOIN lotnisko lo USING(id_lotniska) JOIN status st USING(id_statusu)
                    JOIN bilet bi USING(id_lotu) JOIN pasazer pa USING(id_pasazera)
-                   JOIN bagaz ba USING(id_biletu) JOIN rodzaj_bagazu rb USING(id_rodzaju)
                    WHERE pa.telefon = ",telefon,"")
     con = open.my.connection()
     res = dbSendQuery(con,query)
@@ -244,12 +242,84 @@ add.bilet <- function(telefon, lot) {
 }
 
 delete.bilet <- function(id) {
-  if(trimws(id) != "") {
     query = paste0("DELETE FROM bilet WHERE id_biletu=",id)
     con = open.my.connection()
     res = dbSendQuery(con,query)
     dbClearResult(res)
     close.my.connection(con)
     cat("Usunięto bilet")
-  }
+}
+
+load.biletid.with.bagaz <- function(){
+  query = "SELECT DISTINCT id_biletu FROM bagaz"
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  bilety = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  return(bilety)
+}
+
+load.bagaz <- function(bilet){
+  query = paste0("SELECT * FROM bagaz_pasazera WHERE id_biletu =",bilet)
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  bagaze = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  return(bagaze)
+}
+
+load.id.biletu <- function(){
+  query = "SELECT id_biletu FROM bilet"
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  bilety = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  return(bilety)
+}
+
+load.rodzaj.bagazu <- function(){
+  query = "SELECT nazwa FROM rodzaj_bagazu"
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  rodzaje = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  return(rodzaje)
+}
+
+get.id.bagazu.from.nazwa <- function(nazwa){
+  query = paste0("SELECT id_rodzaju FROM rodzaj_bagazu WHERE nazwa='",nazwa,"'")
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  id = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  return(id)
+}
+
+add.bagaz <- function(id_biletu, rodzaj){
+  id = get.id.bagazu.from.nazwa(rodzaj)
+  query = paste0("INSERT INTO bagaz(id_rodzaju, id_biletu) VALUES (",id,",",id_biletu,")")
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  dbClearResult(res)
+  close.my.connection(con)
+  cat("Dodano bagaż")
+}
+
+load.bilety <- function(id){
+  query = paste0("SELECT l.id_lotu, p.telefon, ltn.kraj, ltn.miasto, l.data_lotu, l.godzina_lotu FROM bilet
+                 JOIN loty l USING(id_lotu)
+                 JOIN lotnisko ltn USING(id_lotniska)
+                 JOIN pasazer p USING(id_pasazera)
+                 WHERE id_biletu=",id)
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  bilety = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  return(bilety)
 }
