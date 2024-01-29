@@ -106,7 +106,7 @@ CREATE OR REPLACE FUNCTION spr_nr_stanowiska() RETURNS TRIGGER AS $$
         IF (NEW.nr_stanowiska < 1 OR NEW.nr_stanowiska> 6)
             THEN RAISE EXCEPTION 'Stanowisko o numerze % nie istnieje.', NEW.nr_stanowiska;
         END IF;
-        IF (NEW.nr_stanowiska= (SELECT nr_stanowiska FROM loty WHERE data_lotu=NEW.data_lotu AND (godzina_lotu <= NEW.godzina_lotu + '00:20:00' AND godzina_lotu >= NEW.godzina_lotu) AND NEW.nr_stanowiska!=OLD.nr_stanowiska))
+        IF (NEW.nr_stanowiska= (SELECT nr_stanowiska FROM loty WHERE data_lotu=NEW.data_lotu AND (godzina_lotu <= NEW.godzina_lotu + '00:20:00' AND godzina_lotu >= NEW.godzina_lotu -'00:20:00')) AND NOT EXISTS (SELECT DISTINCT id_lotu FROM loty WHERE id_lotu=NEW.id_lotu))
             THEN RAISE EXCEPTION 'Stanowisko % w dniu % i godzinie % jest juz zajete.', NEW.nr_stanowiska, NEW.data_lotu, NEW.godzina_lotu;
         END IF;
         RETURN NEW;
@@ -142,7 +142,7 @@ CREATE OR REPLACE FUNCTION wolny_samolot(data_l DATE,godz_l TIME) RETURNS TABLE(
 BEGIN
     RETURN QUERY SELECT s.id_samolotu
     FROM samolot s LEFT OUTER JOIN loty l USING(id_samolotu)
-        WHERE (l.id_lotu IS NULL OR (godzina_lotu > godz_l + '00:20:00' AND godzina_lotu < godz_l AND data_l=data_lotu) AND s.aktywny=TRUE);
+        WHERE (l.id_lotu IS NULL OR (godzina_lotu >= godz_l + '00:20:00' AND godzina_lotu <= godz_l AND data_l=data_lotu) AND s.aktywny=TRUE);
 END;
 $$ LANGUAGE 'plpgsql';
 

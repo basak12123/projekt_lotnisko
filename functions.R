@@ -1,7 +1,7 @@
 library("RPostgres")
 
 open.my.connection <- function() {
-  con <- dbConnect(RPostgres::Postgres(),dbname = 'template1',
+  con <- dbConnect(RPostgres::Postgres(),dbname = 'postgres',
                    host = 'localhost',
                    port = 5434,
                    user = 'postgres',
