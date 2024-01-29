@@ -41,6 +41,12 @@ shinyUI(fluidPage(
                dataTableOutput('bilety.pasazer'),
                dataTableOutput('bilety.pasazer.2')),
 
+      tabPanel('Bagaż pasażera',
+               selectInput(inputId = 'id_biletu3',
+                           label = 'Wybierz numer biletu',
+                           choices = load.biletid.with.bagaz()),
+               dataTableOutput('bagaz.tab')),
+
       tabPanel('Zaktualizuj status',
                selectInput(inputId = 'id_lotu',
                            label = 'Wybierz lot',
@@ -111,9 +117,22 @@ shinyUI(fluidPage(
                             label = 'Dodaj'),
                verbatimTextOutput("info_4")),
 
+      tabPanel('Dodaj bagaż',
+               selectInput(inputId = 'id_biletu4',
+                           label = 'Wybierz bilet',
+                           choices = load.id.biletu()),
+               selectInput(inputId = 'rodzaj',
+                           label = 'Wybierz rodzaj bagażu',
+                           choices = load.rodzaj.bagazu()),
+               actionButton(inputId = 'bagaz.to.add',
+                            label = 'Dodaj'),
+               verbatimTextOutput("info_6")),
+
       tabPanel('Usuń bilet',
-               textInput(inputI = 'id_biletu',
-                         label = 'Numer biletu'),
+               selectInput(inputI = 'id_biletu2',
+                         label = 'Numer biletu',
+                         choices = load.id.biletu()),
+               dataTableOutput('bilety.table'),
                actionButton(inputId = 'bilet.to.remove',
                             label = 'Usuń'),
                verbatimTextOutput("info_5"))
