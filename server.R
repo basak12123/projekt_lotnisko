@@ -23,8 +23,8 @@ shinyServer(function(input, output, session) {
   output$bilety.pasazer <- renderDataTable({
     if(trimws(input$id_biletu) != ""){
       load.moje.loty(input$id_biletu)
-    } else if(trimws(input$telefon) != ""){
-      load.moje.loty.2(input$telefon)
+    } else if(trimws(input$telefon.2) != ""){
+      load.moje.loty.2(input$telefon.2)
     }},
     options = list(
       pageLength = 10,
@@ -47,7 +47,7 @@ shinyServer(function(input, output, session) {
   observeEvent(input$szukaj, {
     if(trimws(input$id_biletu) != ""){
       load.moje.loty(input$id_biletu)
-    } else if(trimws(input$telefon) != ""){
+    } else if(trimws(input$telefon.2) != ""){
       load.moje.loty.2(input$telefon.2)
     }
     })
@@ -55,7 +55,7 @@ shinyServer(function(input, output, session) {
   observeEvent(input$pasazer.to.add, {
     output$info <- renderPrint(add.pasazer(input$imie,
                                            input$nazwisko,
-                                           input$telefon))
+                                           input$telefon.2))
   })
 
   observeEvent(input$update.status.1,{

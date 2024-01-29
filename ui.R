@@ -72,7 +72,7 @@ shinyUI(fluidPage(
                          label = 'Imię'),
                textInput(inputId = 'nazwisko',
                          label = 'Nazwisko'),
-               textInput(inputId = 'telefon',
+               textInput(inputId = 'telefon.2',
                          label = 'Telefon'),
                actionButton(inputId = 'pasazer.to.add',
                             label = 'Dodaj'),
