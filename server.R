@@ -84,8 +84,33 @@ shinyServer(function(input, output, session) {
                                            input$lot))
   })
 
+  observe(output$bilety.table <- renderDataTable(
+    load.bilety(input$id_biletu2), # wywołanie funkcji z example_functions.r
+    options = list(
+      pageLength = 10,
+      lengthChange = FALSE,
+      searching = FALSE,
+      info = FALSE
+    )
+  ))
+
   observeEvent(input$bilet.to.remove, {
-    output$info_5 <- renderPrint(delete.bilet(input$id_biletu))
+    output$info_5 <- renderPrint(delete.bilet(input$id_biletu2))
+  })
+
+  observe(output$bagaz.tab <- renderDataTable(
+    load.bagaz(input$id_biletu3), # wywołanie funkcji z example_functions.r
+    options = list(
+      pageLength = 10,
+      lengthChange = FALSE,
+      searching = FALSE,
+      info = FALSE
+    )
+  ))
+
+  observeEvent(input$bagaz.to.add, {
+    output$info_6 <- renderPrint(add.bagaz(input$id_biletu4,
+                                           input$rodzaj))
   })
 
   observeEvent(input$refresh, {
