@@ -106,8 +106,11 @@ CREATE OR REPLACE FUNCTION spr_nr_stanowiska() RETURNS TRIGGER AS $$
         IF (NEW.nr_stanowiska < 1 OR NEW.nr_stanowiska> 6)
             THEN RAISE EXCEPTION 'Stanowisko o numerze % nie istnieje.', NEW.nr_stanowiska;
         END IF;
-        IF (NEW.nr_stanowiska= (SELECT nr_stanowiska FROM loty WHERE data_lotu=NEW.data_lotu AND (godzina_lotu <= NEW.godzina_lotu + '00:20:00' AND godzina_lotu >= NEW.godzina_lotu -'00:20:00')) AND NOT EXISTS (SELECT DISTINCT id_lotu FROM loty WHERE id_lotu=NEW.id_lotu))
-            THEN RAISE EXCEPTION 'Stanowisko % w dniu % i godzinie % jest juz zajete.', NEW.nr_stanowiska, NEW.data_lotu, NEW.godzina_lotu;
+        IF (NEW.id_lotu NOT IN (SELECT id_lotu FROM loty))
+        THEN
+            IF (NEW.nr_stanowiska= (SELECT nr_stanowiska FROM loty WHERE data_lotu=NEW.data_lotu AND (godzina_lotu <= NEW.godzina_lotu + '00:20:00' AND godzina_lotu >= NEW.godzina_lotu -'00:20:00')) AND NOT EXISTS (SELECT DISTINCT id_lotu FROM loty WHERE id_lotu=NEW.id_lotu))
+                THEN RAISE EXCEPTION 'Stanowisko % w dniu % i godzinie % jest juz zajete.', NEW.nr_stanowiska, NEW.data_lotu, NEW.godzina_lotu;
+            END IF;
         END IF;
         RETURN NEW;
         END;
