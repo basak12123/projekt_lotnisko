@@ -44,6 +44,20 @@ shinyServer(function(input, output, session) {
     )
   )
 
+  output$pilot.samolot.dane <- renderDataTable({
+    if(input$id_samolotu.1 != " - "){
+      load.samoloty.3(input$id_samolotu.1)
+    } else if(input$id_pilota.1 != " - "){
+      load.pilot.2(input$id_pilota.1)
+    }},
+    options = list(
+      pageLength = 10,
+      lengthChange = FALSE,
+      searching = FALSE,
+      info = FALSE
+    )
+  )
+
   observeEvent(input$szukaj, {
     if(trimws(input$id_biletu) != ""){
       load.moje.loty(input$id_biletu)

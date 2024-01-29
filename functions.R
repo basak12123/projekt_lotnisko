@@ -1,7 +1,7 @@
 library("RPostgres")
 
 open.my.connection <- function() {
-  con <- dbConnect(RPostgres::Postgres(),dbname = 'postgres',
+  con <- dbConnect(RPostgres::Postgres(),dbname = 'template1',
                    host = 'localhost',
                    port = 5434,
                    user = 'postgres',
@@ -322,4 +322,44 @@ load.bilety <- function(id){
   dbClearResult(res)
   close.my.connection(con)
   return(bilety)
+}
+
+load.samoloty.2 <- function() {
+  query = "SELECT id_samolotu FROM samolot"
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  samoloty = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  return(append(samoloty, " - ", after = 0))
+}
+
+load.pilot <- function() {
+  query = "SELECT id_pilota FROM pilot"
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  pilot = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  return(append(pilot, " - ", after = 0))
+}
+
+load.samoloty.3 <- function(id_samolotu) {
+  query = paste0("SELECT * FROM samolot WHERE id_samolotu = ", id_samolotu)
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  samoloty = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  return(samoloty)
+}
+
+load.pilot.2 <- function(id_pilota) {
+  query = paste0("SELECT * FROM pilot WHERE id_pilota = ", id_pilota)
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  pilot = dbFetch(res)
+  dbClearResult(res)
+  close.my.connection(con)
+  return(pilot)
 }

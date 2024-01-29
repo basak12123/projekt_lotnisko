@@ -131,13 +131,27 @@ shinyUI(fluidPage(
                verbatimTextOutput("info_6")),
 
       tabPanel('Usuń bilet',
-               selectInput(inputI = 'id_biletu2',
+               selectInput(inputId = 'id_biletu2',
                          label = 'Numer biletu',
                          choices = load.id.biletu()),
                dataTableOutput('bilety.table'),
                actionButton(inputId = 'bilet.to.remove',
                             label = 'Usuń'),
-               verbatimTextOutput("info_5"))
+               verbatimTextOutput("info_5")),
+
+      tabPanel("Aktywuj/Dezaktywuj pilota/samolot",
+               selectInput(inputId = 'id_samolotu.1',
+                           label = 'Numer samolotu',
+                           choices = load.samoloty.2()),
+               selectInput(inputId = 'id_pilota.1',
+                           label = 'ID Pilota',
+                           choices = load.pilot()),
+               actionButton(inputId = 'activate',
+                            label = 'Aktywuj'),
+               actionButton(inputId = 'deactivate',
+                            label = 'Dezaktywuj'),
+               dataTableOutput('pilot.samolot.dane'))
+
 
     )
   )
