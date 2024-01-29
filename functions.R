@@ -1,11 +1,11 @@
 library("RPostgres")
 
 open.my.connection <- function() {
-  con <- dbConnect(RPostgres::Postgres(),dbname = 'projekt_lotnisko', # nazwa naszej projektowej bazy
+  con <- dbConnect(RPostgres::Postgres(),dbname = 'postgres', # nazwa naszej projektowej bazy
                    host = 'localhost',
-                   port = 5432, # port ten sam co w psql - zwykle 5432
-                   user = 'starling', # nasza nazwa użytkownika psql
-                   password = 'pokora2002') # i nasze hasło tego użytkownika
+                   port = 5434, # port ten sam co w psql - zwykle 5432
+                   user = 'postgres', # nasza nazwa użytkownika psql
+                   password = '') # i nasze hasło tego użytkownika
   return (con)
 }
 
@@ -251,7 +251,7 @@ delete.bilet <- function(id) {
 }
 
 load.biletid.with.bagaz <- function(){
-  query = "SELECT DISTINCT id_biletu FROM bagaz"
+  query = "SELECT DISTINCT id_biletu FROM bagaz ORDER BY id_biletu"
   con = open.my.connection()
   res = dbSendQuery(con,query)
   bilety = dbFetch(res)
