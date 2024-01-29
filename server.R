@@ -58,7 +58,7 @@ shinyServer(function(input, output, session) {
                                            input$telefon))
   })
 
-  observeEvent(input$update.status,{
+  observeEvent(input$update.status.1,{
     output$info_2 <- renderPrint(update.status(input$id_lotu,
                                              input$nazwa,
                                              input$opoznienie))

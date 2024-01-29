@@ -125,7 +125,7 @@ load.status.tab <- function(id_lotu) {
 }
 
 update.status <- function(id_lotu, nazwa, opoznienie) {
-  if(opoznienie == "" && nazwa != 'Opóźniony'){
+  if(nazwa != 'Opóźniony'){
     query = paste0("UPDATE loty SET id_statusu = (SELECT s.id_statusu FROM status s WHERE s.nazwa='",nazwa,
                    "') WHERE id_lotu=",id_lotu)
     con = open.my.connection()
@@ -140,9 +140,10 @@ update.status <- function(id_lotu, nazwa, opoznienie) {
     res = dbSendQuery(con,query)
     dbClearResult(res)
     close.my.connection(con)
-    cat("Zmieniono status lotu ", id_lotu," na ",nazwa, " (opoznienie = ", opoznienie, " )")
+    cat("Zmieniono status lotu ", id_lotu," na ",nazwa)
   }
 }
+
 
 load.full.lotniska <- function() {
   query = "SELECT * FROM lotnisko"
@@ -156,7 +157,6 @@ load.full.lotniska <- function() {
   }, simplify = FALSE)
   return(lotniska)
 }
-as.numeric(unlist(strsplit(unlist(load.full.lotniska()[1]), ","))[1])
 
 load.samoloty <- function() {
   query = "SELECT id_samolotu FROM samolot"

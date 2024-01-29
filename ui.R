@@ -58,10 +58,12 @@ shinyUI(fluidPage(
                            label='wybierz status',
                            choices=load.status()),
 
-               textInput(inputId = 'opoznienie',
-                         label = 'Podaj opoznienie'),
+               timeInput(inputId = 'opoznienie',
+                         label = 'Podaj opoznienie',
+                         value = NULL,
+                         seconds = TRUE),
 
-               actionButton(inputId = 'update.status',
+               actionButton(inputId = 'update.status.1',
                             label = 'zaaktualizuj'),
                verbatimTextOutput("info_2")),
 
