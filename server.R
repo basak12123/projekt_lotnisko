@@ -67,9 +67,9 @@ shinyServer(function(input, output, session) {
     })
 
   observeEvent(input$pasazer.to.add, {
-    output$info <- renderPrint(add.pasazer(input$imie,
-                                           input$nazwisko,
-                                           input$telefon.2))
+    output$info <- renderPrint(add.pasazer(input$imie.1,
+                                           input$nazwisko.1,
+                                           input$telefon.4))
   })
 
   observeEvent(input$update.status.1,{
