@@ -233,7 +233,7 @@ n_st VARCHAR(20);
         THEN RAISE EXCEPTION 'Lot ma juz taki status';
         END IF;
         IF (OLD.id_statusu=8 OR OLD.id_statusu=6)
-        THEN RAISE EXCEPTION 'Nie mozna zmienic statusu gdy lot byl odwolany/wyladowal/wystartowal';
+        THEN RAISE EXCEPTION 'Nie mozna zmienic statusu gdy lot byl odwolany/wyladowal';
         END IF;
         IF (NEW.id_statusu=3 AND NEW.opoznienie IS NULL)
         THEN RAISE EXCEPTION 'Nalezy podac opoznienie';
