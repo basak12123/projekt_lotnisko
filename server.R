@@ -1,7 +1,7 @@
 shinyServer(function(input, output, session) {
 
   output$odloty.tab <- renderDataTable(
-    load.odloty(input$kraj), # wywołanie funkcji z example_functions.r
+    load.odloty(input$kraj),
     options = list(
       pageLength = 10,
       lengthChange = FALSE,
@@ -11,7 +11,7 @@ shinyServer(function(input, output, session) {
   )
 
   output$przyloty.tab <- renderDataTable(
-    load.przyloty(input$kraj_2), # wywołanie funkcji z example_functions.r
+    load.przyloty(input$kraj_2),
     options = list(
       pageLength = 10,
       lengthChange = FALSE,
@@ -35,7 +35,7 @@ shinyServer(function(input, output, session) {
   )
 
   output$status.tab <- renderDataTable(
-    load.status.tab(input$id_lotu), # wywołanie funkcji z example_functions.r
+    load.status.tab(input$id_lotu),
     options = list(
       pageLength = 10,
       lengthChange = FALSE,
@@ -85,7 +85,7 @@ shinyServer(function(input, output, session) {
   })
 
   observe(output$bilety.table <- renderDataTable(
-    load.bilety(input$id_biletu2), # wywołanie funkcji z example_functions.r
+    load.bilety(input$id_biletu2),
     options = list(
       pageLength = 10,
       lengthChange = FALSE,
@@ -99,7 +99,7 @@ shinyServer(function(input, output, session) {
   })
 
   observe(output$bagaz.tab <- renderDataTable(
-    load.bagaz(input$id_biletu3), # wywołanie funkcji z example_functions.r
+    load.bagaz(input$id_biletu3),
     options = list(
       pageLength = 10,
       lengthChange = FALSE,
