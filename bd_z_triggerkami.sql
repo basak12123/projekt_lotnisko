@@ -100,6 +100,12 @@ id_biletu INTEGER
 		ON DELETE CASCADE
 );
 
+CREATE OR REPLACE VIEW bagaz_pasazera AS
+SELECT b.id_biletu, p.telefon, rb.nazwa
+FROM bagaz b JOIN bilet bt USING(id_biletu)
+JOIN pasazer p USING(id_pasazera)
+JOIN rodzaj_bagazu rb USING(id_rodzaju);
+
 CREATE OR REPLACE FUNCTION spr_nr_stanowiska() RETURNS TRIGGER AS $$
     BEGIN
         IF ((SELECT s.aktywny FROM samolot s WHERE s.id_samolotu=NEW.id_samolotu)=FALSE)
