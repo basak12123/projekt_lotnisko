@@ -400,7 +400,7 @@ activate.function <- function(id, rodzaj) {
     res = dbSendQuery(con,query)
     dbClearResult(res)
     close.my.connection(con)
-    cat("Dezaktywowano pilota")
+    cat("Aktywowano pilota")
   }
   if(rodzaj == 2){
     query = paste0("UPDATE samolot SET aktywny = TRUE WHERE id_samolotu = ",id,"")
@@ -408,6 +408,6 @@ activate.function <- function(id, rodzaj) {
     res = dbSendQuery(con,query)
     dbClearResult(res)
     close.my.connection(con)
-    cat("Dezaktywowano samolot")
+    cat("Aktywowano samolot")
   }
 }

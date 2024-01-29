@@ -129,7 +129,25 @@ shinyServer(function(input, output, session) {
 
   observeEvent(input$deactivate, {
     output$info_7 <- renderPrint({
+      if(input$id_samolotu.1 != ' - ' && input$id_pilota.1 != ' - ') {
+        cat("Wybierz jedno")
+      }else if(input$id_pilota.1 == ' - ' && input$id_samolotu.1 != ' - ') {
+        deactivate.function(input$id_samolotu.1, 2)
+      }else if(input$id_pilota.1 != ' - ' && input$id_samolotu.1 == ' - '){
+        deactivate.function(input$id_pilota.1, 1)
+      }
+    })
+  })
 
+  observeEvent(input$activate, {
+    output$info_7 <- renderPrint({
+      if(input$id_samolotu.1 != ' - ' && input$id_pilota.1 != ' - ') {
+        cat("Wybierz jedno")
+      }else if(input$id_pilota.1 == ' - ' && input$id_samolotu.1 != ' - ') {
+        activate.function(input$id_samolotu.1, 2)
+      }else if(input$id_pilota.1 != ' - ' && input$id_samolotu.1 == ' - '){
+        activate.function(input$id_pilota.1, 1)
+      }
     })
   })
 
