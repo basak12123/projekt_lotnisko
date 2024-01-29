@@ -240,11 +240,11 @@ n_st VARCHAR(20);
         IF (NOT FOUND) THEN RAISE EXCEPTION 'Nie ma takiego statusu';
         END IF;
         SELECT s.nazwa INTO n_st_old FROM status s JOIN loty l USING(id_statusu) WHERE l.id_lotu=NEW.id_lotu;
-        IF (n_st_old=n_st)
+        IF (n_st_old=n_st AND NEW.opoznienie=OLD.opoznienie)
         THEN RAISE EXCEPTION 'Lot ma juz taki status';
         END IF;
-        IF (OLD.id_statusu=8 OR OLD.id_statusu=6)
-        THEN RAISE EXCEPTION 'Nie mozna zmienic statusu gdy lot byl odwolany/wyladowal';
+        IF (OLD.id_statusu=8 OR OLD.id_statusu=6 OR OLD.id_statusu=7)
+        THEN RAISE EXCEPTION 'Nie mozna zmienic statusu gdy lot byl odwolany/wyladowal/wystartowal';
         END IF;
         IF (NEW.id_statusu=3 AND NEW.opoznienie IS NULL)
         THEN RAISE EXCEPTION 'Nalezy podac opoznienie';
