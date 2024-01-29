@@ -150,7 +150,8 @@ shinyUI(fluidPage(
                             label = 'Aktywuj'),
                actionButton(inputId = 'deactivate',
                             label = 'Dezaktywuj'),
-               dataTableOutput('pilot.samolot.dane'))
+               dataTableOutput('pilot.samolot.dane'),
+               verbatimTextOutput("info_7"))
 
 
     )

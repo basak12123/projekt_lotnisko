@@ -127,6 +127,12 @@ shinyServer(function(input, output, session) {
                                            input$rodzaj))
   })
 
+  observeEvent(input$deactivate, {
+    output$info_7 <- renderPrint({
+
+    })
+  })
+
   observeEvent(input$refresh, {
     refresh()
   })

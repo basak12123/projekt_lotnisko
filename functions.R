@@ -363,3 +363,51 @@ load.pilot.2 <- function(id_pilota) {
   close.my.connection(con)
   return(pilot)
 }
+
+add.bagaz <- function(id_biletu, rodzaj){
+  id = get.id.bagazu.from.nazwa(rodzaj)
+  query = paste0("INSERT INTO bagaz(id_rodzaju, id_biletu) VALUES (",id,",",id_biletu,")")
+  con = open.my.connection()
+  res = dbSendQuery(con,query)
+  dbClearResult(res)
+  close.my.connection(con)
+  cat("Dodano bagaż")
+}
+
+deactivate.function <- function(id, rodzaj) {
+  if(rodzaj == 1){
+    query = paste0("UPDATE pilot SET aktywny = FALSE WHERE id_pilota = ",id,"")
+    con = open.my.connection()
+    res = dbSendQuery(con,query)
+    dbClearResult(res)
+    close.my.connection(con)
+    cat("Dezaktywowano pilota")
+  }
+  if(rodzaj == 2){
+    query = paste0("UPDATE samolot SET aktywny = FALSE WHERE id_samolotu = ",id,"")
+    con = open.my.connection()
+    res = dbSendQuery(con,query)
+    dbClearResult(res)
+    close.my.connection(con)
+    cat("Dezaktywowano samolot")
+  }
+}
+
+activate.function <- function(id, rodzaj) {
+  if(rodzaj == 1){
+    query = paste0("UPDATE pilot SET aktywny = TRUE WHERE id_pilota = ",id,"")
+    con = open.my.connection()
+    res = dbSendQuery(con,query)
+    dbClearResult(res)
+    close.my.connection(con)
+    cat("Dezaktywowano pilota")
+  }
+  if(rodzaj == 2){
+    query = paste0("UPDATE samolot SET aktywny = TRUE WHERE id_samolotu = ",id,"")
+    con = open.my.connection()
+    res = dbSendQuery(con,query)
+    dbClearResult(res)
+    close.my.connection(con)
+    cat("Dezaktywowano samolot")
+  }
+}
