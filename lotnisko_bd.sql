@@ -141,14 +141,6 @@ $$ LANGUAGE 'plpgsql';
 
 CREATE TRIGGER ok_aktywnosc_pilota BEFORE UPDATE ON pilot FOR EACH ROW EXECUTE PROCEDURE aktywny_pilot();
 
-CREATE OR REPLACE FUNCTION wolny_samolot(data_l DATE,godz_l TIME) RETURNS TABLE(wolny_samolot INTEGER) AS $$
-BEGIN
-    RETURN QUERY SELECT s.id_samolotu
-    FROM samolot s LEFT OUTER JOIN loty l USING(id_samolotu)
-        WHERE (l.id_lotu IS NULL OR (godzina_lotu >= godz_l + '00:20:00' AND godzina_lotu <= godz_l AND data_l=data_lotu) AND s.aktywny=TRUE);
-END;
-$$ LANGUAGE 'plpgsql';
-
 CREATE RULE nie_usuwac_lotu AS ON DELETE TO loty DO INSTEAD NOTHING;
 
 CREATE OR REPLACE FUNCTION spr_pelnosc_samolotu() RETURNS TRIGGER AS $$
@@ -327,7 +319,7 @@ INSERT INTO pasazer(imie, nazwisko, telefon) VALUES ('Karina', 'Teodorczyk', 109
  INSERT INTO pasazer(imie, nazwisko, telefon) VALUES ('Adam', 'Cybul', 640795290);
  INSERT INTO pasazer(imie, nazwisko, telefon) VALUES ('Natalia', 'Gawron', 281454077);
  INSERT INTO pasazer(imie, nazwisko, telefon) VALUES ('Sylwester', 'Okołotowicz', 810133431);
- INSERT INTO pasazer(imie, nazwisko, telefon) VALUES ('Natalia', 'Nowak', 502902971);
+ INSERT INTO pasazer(imie, nazwisko, telefon) VALUES ('Natalia', 'Nowak', );
  INSERT INTO pasazer(imie, nazwisko, telefon) VALUES ('Lech', 'Mentzen', 300824252);
  INSERT INTO pasazer(imie, nazwisko, telefon) VALUES ('Joanna', 'Ogórek', 714459079);
  INSERT INTO pasazer(imie, nazwisko, telefon) VALUES ('Laura', 'Pita', 896521940);
